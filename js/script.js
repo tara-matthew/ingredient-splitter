@@ -16,9 +16,11 @@ function checkIngredients(ingredients) {
         '3': ['kg'],
         '4':['fluid', 'ounces'],
         '5': ['teaspoons'],
-        '6': ['two', 'things'],
-        '7': ['three', 'things', 'here'],
-        '8': ['three', 'things']
+        '6': ['pint'],
+        '7': ['pints'],
+        '8': ['mg'],
+        '9': ['pound'],
+        '10': ['lb']
     };
 
     if ($.isNumeric(firstWord)) {
@@ -26,7 +28,12 @@ function checkIngredients(ingredients) {
         var restOfString = returnRestOfString(ingredients);
         // Now check the next word
         var measurement = checkForMeasurement(restOfString, acceptedMeasurements);
-        return measurement;
+        if (measurement) {
+            var stringAfterMeasurement = returnStringAfterMeasurement(measurement.length, restOfString);
+            return stringAfterMeasurement;
+        }
+
+        return 'The rest of the string is the ingredient';
 
     }
 
@@ -59,12 +66,21 @@ function checkForMeasurement(restOfString, acceptedMeasurements) {
             if (acceptedMeasurements[property][i] == restOfString[i]) {
                 matches++;
                 if (matches == acceptedMeasurements[property].length) {
-                    return 'Match found! It was ' + acceptedMeasurements[property].join(' ');
+                    return acceptedMeasurements[property];
                 }
             }
         }
     }
 
-    return 'No match found. There is no measurement';
+    //No measurement
+    return false;
 
+}
+
+function returnStringAfterMeasurement(measurementLength, restOfString) {
+    if (restOfString.length > measurementLength) {
+        return restOfString.slice(measurementLength);
+    }
+
+    return 'Where is the ingredient?';
 }
