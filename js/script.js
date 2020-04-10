@@ -17,7 +17,8 @@ function checkIngredients(ingredients) {
         '4':['fluid', 'ounces'],
         '5': ['teaspoons'],
         '6': ['two', 'things'],
-        '7': ['three', 'things', 'here']
+        '7': ['three', 'things', 'here'],
+        '8': ['three', 'things']
     };
 
     if ($.isNumeric(firstWord)) {
@@ -50,36 +51,20 @@ function returnRestOfString(ingredients) {
 }
 
 function checkForMeasurement(restOfString, acceptedMeasurements) {
-    if (restOfString.length == 1) {
-        for (var property in acceptedMeasurements) {
-            if (acceptedMeasurements[property].length == 1) {
-                if (restOfString[0] == acceptedMeasurements[property]) {
-                    return 'match found! It was ' + acceptedMeasurements[property];
+    //TODO refactor this, maybe make recursive
+    for (var property in acceptedMeasurements) {
+        var matches = 0;
+        // Property has more than 1 word
+        for (var i = 0; i < acceptedMeasurements[property].length; i ++) {
+            if (acceptedMeasurements[property][i] == restOfString[i]) {
+                matches++;
+                if (matches == acceptedMeasurements[property].length) {
+                    return 'Match found! It was ' + acceptedMeasurements[property].join(' ');
                 }
             }
         }
-
-        return 'No match found';
-
     }
-    else {
-        for (var property in acceptedMeasurements) {
-            var matches = 0;
-            if (acceptedMeasurements[property].length > 1) {
-                for (var i = 0; i < acceptedMeasurements[property].length; i ++) {
-                    if (acceptedMeasurements[property][i] == restOfString[i]) {
-                        matches++;
-                        if (matches == acceptedMeasurements[property].length) {
-                            return 'Match found! It was ' + acceptedMeasurements[property].join(' ');
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
 
-        return 'no match found';
+    return 'No match found. There is no measurement';
 
-    }
 }
