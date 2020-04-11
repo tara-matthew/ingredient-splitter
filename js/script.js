@@ -58,19 +58,17 @@ function returnRestOfString(ingredients) {
 }
 
 function checkForMeasurement(restOfString, acceptedMeasurements) {
-    //TODO refactor this, maybe make recursive
     for (var property in acceptedMeasurements) {
-        var matches = 0;
-        // Property has more than 1 word
-        for (var i = 0; i < acceptedMeasurements[property].length; i ++) {
-            if (acceptedMeasurements[property][i] == restOfString[i]) {
-                matches++;
-                if (matches == acceptedMeasurements[property].length) {
-                    return acceptedMeasurements[property];
-                }
-            }
+        if (acceptedMeasurements[property].length < 1) {
+            return true;
+        } else if (acceptedMeasurements[property][0] == restOfString[0]) {
+            return checkForMeasurement(
+                restOfString.slice(1),
+                {'0': acceptedMeasurements[property].slice(1)}
+            );
         }
     }
+}
 
     //No measurement
     return false;
