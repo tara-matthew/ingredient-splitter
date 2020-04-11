@@ -29,7 +29,7 @@ function checkIngredients(ingredients) {
         // Now check the next word
         var measurement = checkForMeasurement(restOfString, acceptedMeasurements);
         if (measurement) {
-            var stringAfterMeasurement = returnStringAfterMeasurement(measurement.length, restOfString);
+            var stringAfterMeasurement = (measurement.length >= 1 ? measurement: 'Where is the ingredient?');
             return stringAfterMeasurement;
         }
 
@@ -60,7 +60,7 @@ function returnRestOfString(ingredients) {
 function checkForMeasurement(restOfString, acceptedMeasurements) {
     for (var property in acceptedMeasurements) {
         if (acceptedMeasurements[property].length < 1) {
-            return true;
+            return restOfString;
         } else if (acceptedMeasurements[property][0] == restOfString[0]) {
             return checkForMeasurement(
                 restOfString.slice(1),
@@ -68,17 +68,6 @@ function checkForMeasurement(restOfString, acceptedMeasurements) {
             );
         }
     }
-}
 
-    //No measurement
     return false;
-
-}
-
-function returnStringAfterMeasurement(measurementLength, restOfString) {
-    if (restOfString.length > measurementLength) {
-        return restOfString.slice(measurementLength);
-    }
-
-    return 'Where is the ingredient?';
 }
