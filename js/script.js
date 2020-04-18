@@ -8,40 +8,48 @@ $(document).ready(function() {
 
 function checkIngredients(ingredients) {
 
-    var firstWord = getFirstWord(ingredients);
     var acceptedMeasurements = {
         '0': ['grams'],
         '1': ['g'],
         '2': ['kilograms'],
         '3': ['kg'],
-        '4':['fluid', 'ounces'],
+        '4': ['fluid', 'ounces'],
         '5': ['teaspoons'],
         '6': ['pint'],
         '7': ['pints'],
         '8': ['mg'],
         '9': ['pound'],
-        '10': ['lb']
+        '10': ['lb'],
+        '11': ['three', 'things', 'here'],
+        '12': ['this', 'is', 'four', 'things']
     };
 
-    if ($.isNumeric(firstWord)) {
-        console.log('First word is a number!');
-        var restOfString = returnRestOfString(ingredients);
-        // Now check the next word
-        var measurement = checkForMeasurement(restOfString, acceptedMeasurements);
-        if (measurement) {
-            var stringAfterMeasurement = (measurement.length >= 1 ? measurement: 'Where is the ingredient?');
-            return stringAfterMeasurement;
+    ingredients = ingredients.split(', ');
+    var firstWord = [];
+    var restOfString = [];
+    var measurement = [];
+    var stringAfterMeasurement = [];
+
+    for (var i = 0; i < ingredients.length; i++) {
+        firstWord[i] = getFirstWord(ingredients[i]);
+        if ($.isNumeric(firstWord[i])) {
+            console.log('First word is a number!');
+            restOfString[i] = returnRestOfString(ingredients[i]);
+            measurement[i] = checkForMeasurement(restOfString[i], acceptedMeasurements);
+            if (measurement[i]) {
+                stringAfterMeasurement[i] = (measurement[i].length >= 1 ? measurement[i]: 'Where is the ingredient?');
+            } else {
+                stringAfterMeasurement[i] = 'The rest of the string is the ingredient';
+            }
+        } else {
+            stringAfterMeasurement[i] = 'Unit of measurement is in the first word. The rest is the ingredient';
         }
-
-        return 'The rest of the string is the ingredient';
-
     }
 
-    return 'Unit of measurement is in the first word. The rest is the ingredient';
+    return stringAfterMeasurement;
 }
 
 function getFirstWord(ingredients) {
-
     ingredients = ingredients.split(" ");
     return ingredients[0];
 }
@@ -57,6 +65,7 @@ function returnRestOfString(ingredients) {
     return remainingIngredients;
 }
 
+// Recursion!
 function checkForMeasurement(restOfString, acceptedMeasurements) {
     for (var property in acceptedMeasurements) {
         if (acceptedMeasurements[property].length < 1) {
